@@ -1,0 +1,63 @@
+name: Xdodge
+settings:
+  base:
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    SWIFT_VERSION: "5.0"
+targets:
+  Xdodge:
+    type: application
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: Xdodge
+      # Single source of truth: the game at the repo root is copied into the bundle on every build.
+      - path: ../xdodge.html
+        buildPhase: resources
+    entitlements:
+      path: Xdodge/Xdodge.entitlements
+      properties:
+        com.apple.developer.game-center: true
+    info:
+      path: Xdodge/Info.plist
+      properties:
+        CFBundleDisplayName: Xdodge
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
+        LSRequiresIPhoneOS: true
+        ITSAppUsesNonExemptEncryption: false
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        UIApplicationSupportsIndirectInputEvents: true
+        UILaunchScreen:
+          UIColorName: LaunchBackground
+        UIStatusBarHidden: true
+        UIRequiresFullScreen: true
+        UIUserInterfaceStyle: Dark
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        "UISupportedInterfaceOrientations~ipad":
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.eisenjimmy.xdodge
+        PRODUCT_NAME: Xdodge
+        TARGETED_DEVICE_FAMILY: "1,2"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        CODE_SIGN_STYLE: Automatic
+        # Your Apple Developer Team ID. Xcode's Signing tab also works, but every `xcodegen generate` resets it.
+        DEVELOPMENT_TEAM: ""
+schemes:
+  Xdodge:
+    build:
+      targets:
+        Xdodge: all
+    run:
+      config: Debug
+    archive:
+      config: Release

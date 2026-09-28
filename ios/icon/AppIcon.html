@@ -1,0 +1,35 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><style>html,body{margin:0;background:#120a22;overflow:hidden}canvas{display:block;width:1024px;height:1024px;image-rendering:pixelated}</style></head>
+<body><canvas id="c" width="128" height="128"></canvas>
+<script>
+const c=document.getElementById('c'),g=c.getContext('2d'),B=[0,8,2,10,12,4,14,6,3,11,1,9,15,7,13,5],px=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};
+const stops=['#150b28','#241340','#3b1d52','#5e2659','#8a3561','#b04a5f'];
+for(let y=0;y<128;y++){const t=y/127*(stops.length-1),i=Math.min(stops.length-2,Math.floor(t)),f=t-i;for(let x=0;x<128;x++)px(x,y,1,1,(f*16>B[(y&3)*4+(x&3)]+.5)?stops[i+1]:stops[i])}
+for(const[x,y]of[[12,10],[30,22],[104,14],[116,34],[20,44],[92,8],[60,6],[8,70],[120,62]])px(x,y,1,1,'#c9b6e6');
+for(const[x,y]of[[104,14],[20,44]]){px(x-1,y,3,1,'#8f79b5');px(x,y-1,1,3,'#8f79b5');px(x,y,1,1,'#fff1c9')}
+// pasture island
+const iy=96;px(10,iy,108,3,'#9ee063');px(10,iy+3,108,11,'#6cbd44');for(let x=10;x<118;x+=16)px(x,iy+3,8,11,'#62b03e');
+for(let k=0;k<60;k++){const x=10+Math.floor(Math.random()*108),y=iy+3+Math.floor(Math.random()*10);px(x,y,1,1,Math.random()<.5?'#4f9834':'#9ee063')}
+for(let x=10;x<118;x++){const u=(x-10)/107,d=Math.round(8+14*Math.pow(Math.sin(Math.PI*u),.8)+((x*7)%3)-1);px(x,iy+14,1,2,'#4f9834');px(x,iy+16,1,Math.max(0,d-6),'#8a5530');px(x,iy+16+Math.max(0,d-6),1,6,'#43251a');px(x,iy+15+d,1,1,'#120b1f')}
+px(9,iy,1,14,'#120b1f');px(118,iy,1,14,'#120b1f');px(10,iy-1,108,1,'#120b1f');
+// target ring under the bomb
+const rc=[92,103],rr=13;g.fillStyle='rgba(255,59,92,.35)';for(let dy=-5;dy<=5;dy++){const w=Math.floor(Math.sqrt(rr*rr-(dy*2.4)**2)||0);if(w>0)g.fillRect(rc[0]-w,rc[1]+dy,w*2+1,1)}
+g.fillStyle='#ff3b5c';for(let a=0;a<64;a++){if((a>>2)&1)continue;const t=a/64*Math.PI*2;g.fillRect(Math.round(rc[0]+Math.cos(t)*rr),Math.round(rc[1]+Math.sin(t)*rr*.42),1,1)}
+// big X logo
+const X=[99,99,54,28,54,99,99],sc=11,ox=Math.round((128-7*sc)/2)-2,oy=10,depth=7;
+const drawX=(col,dx,dy)=>{g.fillStyle=col;for(let r=0;r<7;r++)for(let k=0;k<7;k++)if(X[r]&(64>>k))g.fillRect(dx+k*sc,dy+r*sc,sc,sc)};
+const ring=[[-2,0],[2,0],[0,-2],[0,2],[-1,-1],[1,-1],[-1,1],[1,1],[-2,1],[2,1],[-1,2],[1,2],[-2,-1],[2,-1],[-1,-2],[1,-2]];
+for(let d=0;d<=depth;d++)for(const[a,b]of ring)drawX('#120b1f',ox+Math.round(d*.5)+a,oy+d+b);
+for(let d=depth;d>=1;d--)drawX(d>4?'#2e1238':'#5a1f55',ox+Math.round(d*.5),oy+d);
+const bands=['#ffb3a1','#ff6a52','#ff4b3e','#e8323f','#c8243f','#a01c3c','#7c1636'];
+for(let r=0;r<7;r++)for(let k=0;k<7;k++)if(X[r]&(64>>k)){const x=ox+k*sc,y=oy+r*sc;px(x,y,sc,sc,bands[r]);if(r===0||!(X[r-1]&(64>>k)))px(x,y,sc,2,'rgba(255,255,255,.6)');if(k===0||!(X[r]&(64>>(k-1))))px(x,y,1,sc,'rgba(255,255,255,.25)')}
+g.fillStyle='rgba(255,255,255,.28)';for(let r=0;r<7*sc;r++){const o=ox+18-Math.round(r*.6);for(let x=o;x<o+5;x++){const k=Math.floor((x-ox)/sc),rr=Math.floor(r/sc);if(k>=0&&k<7&&(X[rr]&(64>>k)))g.fillRect(x,oy+r,1,1)}}
+// bomb with lit fuse
+const bx=92,by=92,R=9;const disc=(cx,cy,r,col)=>{g.fillStyle=col;for(let dy=-r;dy<=r;dy++){const w=Math.floor(Math.sqrt(r*r-dy*dy));g.fillRect(cx-w,cy+dy,w*2+1,1)}};
+g.fillStyle='rgba(10,34,12,.45)';g.fillRect(bx-8,by+10,17,2);
+disc(bx,by,R+1,'#120b1f');px(bx-3,by-R-4,6,4,'#120b1f');disc(bx,by,R,'#1f1b2c');
+for(let dy=R-2;dy<=R;dy++){const w=Math.floor(Math.sqrt(R*R-dy*dy));px(bx-w,by+dy,w*2+1,1,'#15121f')}
+px(bx-R+3,by-R+2,3,1,'#5a5680');px(bx-R+2,by-R+3,1,3,'#5a5680');px(bx-R+3,by-R+3,1,1,'#8c8aa8');
+px(bx-2,by-R-3,4,2,'#8c8aa8');px(bx,by-R-5,1,2,'#d9b27a');px(bx+1,by-R-6,1,1,'#d9b27a');px(bx+2,by-R-7,1,1,'#d9b27a');
+const sx=bx+3,sy=by-R-9;px(sx-2,sy,5,1,'#ffe066');px(sx,sy-2,1,5,'#ffe066');px(sx-1,sy-1,3,3,'#fffbe6');px(sx-3,sy-3,1,1,'#ff9a2e');px(sx+3,sy-3,1,1,'#ff9a2e');px(sx-3,sy+3,1,1,'#ff9a2e');px(sx+3,sy+3,1,1,'#ff9a2e');
+</script></body></html>
